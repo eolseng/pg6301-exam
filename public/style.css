@@ -1,0 +1,128 @@
+
+:root {
+    --primary-color: #eb586f;
+    --secondary-color: #d8e9f0;
+    --third-color: #4aa0d5;
+    --fourth-color: #454553;
+
+    --main-bg-color: #FAFAFA;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    font-family: "Baloo Paaji 2", cursive;
+
+    background-color: var(--main-bg-color);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+
+    height: 60px;
+    padding: 10px;
+    background-color: var(--secondary-color);
+
+    border-bottom: 1px solid black;
+}
+
+.header-logo {
+    margin: 5px;
+    font-size:30px;
+    line-height: 50px;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.header-logo:hover {
+    color: var(--fourth-color);
+}
+
+.header-text {
+    font-size: 24px;
+    line-height: 60px;
+}
+
+.header-right {
+    margin-left: auto;
+}
+
+.content {
+    margin: auto;
+    max-width: 1080px;
+    padding: 10px;
+}
+
+.btn {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px;
+
+    color: black;
+    text-align: center;
+    text-decoration: none;
+
+    border: 2px outset rgba(0, 0, 0, 0.30);
+    border-radius: 10px;
+
+    background-color: var(--third-color);
+}
+
+.btn:hover {
+    border: 2px inset rgba(0, 0, 0, 0.30);
+    color: white;
+    background-color: var(--fourth-color);
+    cursor: pointer;
+}
+
+.btn-m {
+    min-width: 80px;
+    height: 26px;
+    line-height: 26px;
+}
+
+.btn-l{
+    font-size: 20px;
+    min-width: 120px;
+    height: 36px;
+    line-height: 36px;
+}
+
+.btn-cta {
+    font-weight: 800;
+    background-color: var(--primary-color);
+}
+
+.form-container {
+    margin: auto;
+    display: inline-block;
+
+    padding: 30px;
+
+    border: 2px solid rgba(0, 0, 0, 0.30);
+    border-radius: 10px;
+
+}
+
+.form-title {
+    font-size: 32px;
+    text-decoration: underline;
+
+}
+
+.form-subtitle {
+    margin-bottom: 5px;
+
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.form-input {
+    padding: 5px;
+
+    font-size: 18px;
+}
+
+

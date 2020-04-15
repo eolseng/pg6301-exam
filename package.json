@@ -12,21 +12,30 @@
     "build": "webpack --mode production",
     "dev": "concurrently \"yarn watch:client\" \"yarn watch:server\"",
     "start": "node src/server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --coverage",
     "watch:client": "webpack --watch --mode development",
     "watch:server": "nodemon src/server/server.js --watch src/server --watch public/bundle.js"
   },
   "dependencies": {
     "express": "4.17.1",
+    "express-session": "1.17.0",
+    "express-ws": "4.0.0",
+
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+
     "react": "16.12.0",
     "react-dom": "16.12.0",
+    "react-router": "5.1.2",
     "react-router-dom": "5.1.2"
   },
   "devDependencies": {
+    "@babel/cli": "7.7.4",
     "@babel/core": "7.7.4",
     "@babel/plugin-proposal-class-properties": "7.7.4",
     "@babel/preset-env": "7.7.4",
     "@babel/preset-react": "7.7.4",
+
     "babel-jest": "24.9.0",
     "babel-loader": "8.0.6",
 
@@ -37,7 +46,7 @@
     "jsdom": "15.2.1",
     "concurrently": "5.0.0",
     "nodemon": "2.0.1",
-    "react-addons-test-utils": "^15.4.2",
+    "react-addons-test-utils": "^15.6.2",
 
     "webpack": "4.41.2",
     "webpack-cli": "3.3.10",
