@@ -8,10 +8,15 @@ const path = require('path');
 const Users = require('./db/users');
 const authApi = require('./routes/auth-api');
 
+const WsHandler = require('./ws/ws-handler');
+
 const app = express();
 
 // Handle JSON Payloads
 app.use(bodyParser.json());
+
+// Setup WebSocket handling
+WsHandler.init(app);
 
 // Setup user session cookies
 app.use(session({
@@ -24,7 +29,7 @@ app.use(session({
 // Serve static content from the public folder
 app.use(express.static('public'));
 
-// Setup user authentication
+// Setup user authentication with Passport
 passport.use(new LocalStrategy(
     {
         usernameField: 'userId',

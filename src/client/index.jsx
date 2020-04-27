@@ -6,6 +6,7 @@ import {Home} from "./home";
 import Header from "./header";
 import {SignUp} from "./signup";
 import {Login} from "./login";
+import {Chat} from "./chat";
 
 class App extends React.Component {
 
@@ -14,6 +15,7 @@ class App extends React.Component {
 
         this.state = {
             user: null,
+            userCount: 1
         };
     }
 
@@ -76,10 +78,10 @@ class App extends React.Component {
                     <Switch>
                         <Route exact path={"/login"}
                                render={props => <Login {...props}
-                                                        fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>}/>
+                                                       fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>}/>
                         <Route exact path={"/signup"}
                                render={props => <SignUp {...props}
-                                                      fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>}/>
+                                                        fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>}/>
                         <Route exact path={"/"}
                                render={props => <Home {...props}
                                                       user={this.state.user}

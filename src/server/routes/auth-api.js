@@ -2,6 +2,8 @@ const express = require('express');
 const passport = require('passport');
 
 const Users = require('../db/users');
+const Tokens = require('../ws/tokens');
+
 const router = express.Router();
 
 router.post('/signup', function (req, res) {
@@ -31,6 +33,18 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 router.post('/logout', function (req, res) {
     req.logout();
     res.status(204).send();
+});
+
+router.post('/wstoken', function (req, res) {
+
+    if(!req.user){
+        res.status(401).send();
+        return;
+    }
+
+    const token = Tokens.createToken(req.user.id);
+    res.status(201).json({wstoken: token});
+
 });
 
 router.get('/user', function (req, res) {

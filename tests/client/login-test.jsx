@@ -1,3 +1,5 @@
+import {overrideWebSocket} from "../mytest-utils-ws";
+
 const React = require('react');
 const {mount} = require('enzyme');
 const {MemoryRouter} = require('react-router-dom');

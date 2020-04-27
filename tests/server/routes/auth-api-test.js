@@ -116,3 +116,44 @@ test("Test create user, log out and log in again", async () => {
     expect(response.statusCode).toBe(200);
 
 });
+
+test("Test get WS Token", async () => {
+
+    // Should not work not signed in
+    let response = await request(app)
+        .post('/api/wstoken');
+    expect(response.statusCode).toBe(401);
+
+    // Create authenticated session
+    const userId = 'test_' + (counter++);
+    const password = 'test';
+    const agent = request.agent(app);
+
+    // Sign up
+    response = await agent
+        .post('/api/signup')
+        .send({
+            userId: userId,
+            password: password
+        })
+        .set('Content-Type', 'application/json');
+    expect(response.statusCode).toBe(201);
+
+    // Retrieve token with authenticated session
+    response = await agent
+        .post('/api/wstoken');
+    expect(response.statusCode).toBe(201);
+    expect(response.body.wstoken).toBeDefined();
+    let firstToken = response.body.wstoken;
+
+    // Retrieve a second token
+    response = await agent
+        .post('/api/wstoken');
+    expect(response.statusCode).toBe(201);
+    expect(response.body.wstoken).toBeDefined();
+    let secondToken = response.body.wstoken;
+
+    // Each request should generate a unique token
+    expect(firstToken).not.toBe(secondToken);
+
+});
