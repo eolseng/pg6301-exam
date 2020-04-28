@@ -7,6 +7,9 @@ const path = require('path');
 
 const Users = require('./db/users');
 const authApi = require('./routes/auth-api');
+const userApi = require('./routes/user-api');
+const cardsApi = require('./routes/cards-api');
+const lootboxApi = require('./routes/lootbox-api');
 
 const WsHandler = require('./ws/ws-handler');
 
@@ -22,7 +25,6 @@ WsHandler.init(app);
 app.use(session({
     secret: 'the best secret ever kept secret until now',
     resave: false,
-    // TODO: Add "Welcome back!" message based on uninitialized cookies as a flex (set to true)
     saveUninitialized: false
 }));
 
@@ -68,6 +70,9 @@ app.use(passport.session());
 
 // Routes:
 app.use('/api', authApi);
+app.use('/api', userApi);
+app.use('/api', cardsApi);
+app.use('/api', lootboxApi);
 
 app.use((req, res, next) => {
     res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'index.html'));

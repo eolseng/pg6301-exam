@@ -8,8 +8,10 @@ const router = express.Router();
 
 router.post('/signup', function (req, res) {
 
-    const created = Users.createUser(req.body.userId, req.body.password);
+    // This endpoint is PUBLIC and available to everyone
 
+    const created = Users.createUser(req.body.userId, req.body.password);
+    
     if (!created) {
         res.status(400).send();
         return;
@@ -27,17 +29,26 @@ router.post('/signup', function (req, res) {
 });
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
+
+    if (!req.user) {
+        res.status(401).send();
+        return;
+    }
+    
     res.status(204).send();
 });
 
 router.post('/logout', function (req, res) {
+
+    // This endpoint is PUBLIC and available to everyone
+    
     req.logout();
     res.status(204).send();
 });
 
 router.post('/wstoken', function (req, res) {
 
-    if(!req.user){
+    if (!req.user) {
         res.status(401).send();
         return;
     }
@@ -45,19 +56,6 @@ router.post('/wstoken', function (req, res) {
     const token = Tokens.createToken(req.user.id);
     res.status(201).json({wstoken: token});
 
-});
-
-router.get('/user', function (req, res) {
-    
-    if (!req.user) {
-        res.status(401).send();
-        return;
-    }
-
-    res.status(200).json({
-        // TODO: Fill in the response with other needed user-info
-        id: req.user.id
-    });
 });
 
 module.exports = router;

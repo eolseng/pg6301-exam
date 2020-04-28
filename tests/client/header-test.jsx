@@ -28,7 +28,7 @@ test("Test not logged in", async () => {
 
 test("Test logged in", async () => {
 
-    const userId = "Test";
+    const userId = "Schmidt";
     const updateLoggedInUser = () => {};
 
     const driver = mount(
@@ -48,8 +48,9 @@ test("Test log out", async () => {
 
     overrideFetch(app);
 
-    let userId = "Test";
+    let userId = "Schmidt";
     const updateLoggedInUser = (id) => {userId = id};
+
     let page = null;
     const history = {push: (h) => {page=h}};
 

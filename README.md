@@ -1,10 +1,8 @@
-# EXAM - PG6301 - ID 0000
+###### EXAM - PG6301 - ID 365
+# Schmidts Stinging Friends
 
-Template repository for the exam in the course 'PG6301' - 'Web Development And API Design'.
-
-Feel free to fork it and use it as a basis for your own project.
-
-Remember to change the Candidate ID at the top of this README and the "author", "name" and "description" in the 'package.json' file.
+Schmidts Pain Scale data taken from:
+https://www.atlasobscura.com/articles/the-colorful-pain-index-of-the-stinging-ants-bees-and-wasps-around-the-world
 
 ## External sources:
 From https://github.com/arcuri82/web_development_and_api_design:

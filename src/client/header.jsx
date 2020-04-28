@@ -70,7 +70,7 @@ export class Header extends React.Component {
 
         return (
             <div className={"header"}>
-                <Link className={"header-logo"} to={"/"}>HEADER LOGO</Link>
+                <Link className={"header-logo"} to={"/"}>Schmidts Stinging Friends</Link>
                 {content}
             </div>
         );

@@ -94,7 +94,7 @@ export class Chat extends React.Component {
 
     };
 
-    submitMessage = () => {
+    submitMessage = () => {
         const msg = this.state.msgText;
 
         if (msg === "") {
@@ -136,7 +136,7 @@ export class Chat extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                        {this.state.messages.map((message) => this.renderMessage(message))}
+                    {this.state.messages.map((message) => this.renderMessage(message))}
                     </tbody>
                 </table>
             </React.Fragment>
@@ -145,9 +145,16 @@ export class Chat extends React.Component {
 
     render() {
 
+        const user = this.props.user;
         const messages = this.state.messages;
 
-        if (this.state.errorMsg) {
+        if (!user) {
+            return (
+                <div>
+                    <p>Please sign in to use the chat.</p>
+                </div>
+            )
+        } else if (this.state.errorMsg) {
             return (
                 <div className={"error-msg"}>
                     <p>ERROR: {this.state.errorMsg}</p>

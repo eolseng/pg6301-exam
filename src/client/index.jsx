@@ -67,13 +67,18 @@ class App extends React.Component {
 
     render() {
 
-        const userId = this.state.user ? this.state.user.id : null;
+        const user = this.state.user ? this.state.user : null;
+        const userId = user ? user.id : null;
+
+        let chat;
+        if (user) {
+            chat = <Chat user={user}/>
+        }
 
         return (
             <BrowserRouter>
                 <Header userId={userId}
                         updateLoggedInUser={this.updateLoggedInUser}/>
-
                 <div className={"content"}>
                     <Switch>
                         <Route exact path={"/login"}
@@ -84,11 +89,12 @@ class App extends React.Component {
                                                         fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>}/>
                         <Route exact path={"/"}
                                render={props => <Home {...props}
-                                                      user={this.state.user}
+                                                      user={user}
                                                       fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>}/>
                         <Route component={this.notFound}/>
                     </Switch>
                 </div>
+                {chat}
             </BrowserRouter>
         );
     }

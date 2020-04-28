@@ -1,10 +1,10 @@
 {
-  "author": "Candidate Number: [FILL IN CANDIDATE NUMBER]",
+  "author": "Candidate Number: 365",
 
-  "name": "todo",
+  "name": "schmidts-stinging-friends",
   "version": "1.0.0",
   "license": "LGPL-3.0",
-  "description": "TODO",
+  "description": "Schmidts Stinging Friends - A gacha game based on 'The Schmidt Pain Index' developed by the entomologist Dr. Justin Schmidts.",
   "keywords": [],
 
   "main": "index.js",
@@ -50,7 +50,9 @@
 
     "webpack": "4.41.2",
     "webpack-cli": "3.3.10",
-    "webpack-dev-server": "3.9.0"
+    "webpack-dev-server": "3.9.0",
+
+    "md5": "2.2.1"
   },
 
   "engines": {

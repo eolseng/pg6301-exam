@@ -13,14 +13,6 @@ test("Test failed login", async () => {
 
 });
 
-test("Test fail to retrieve data from non-existent user", async () => {
-
-    const response = await request(app)
-        .get('/api/user');
-    expect(response.statusCode).toBe(401);
-
-});
-
 test("Test create user and get data", async () => {
 
     const userId = "test_" + (counter++);
