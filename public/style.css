@@ -211,3 +211,18 @@ body {
     font-size: 20px;
     font-weight: 800;
 }
+
+.notification-bar {
+    margin: 10px;
+    font-size: 18px;
+    font-weight: 600w;
+    text-align: center;
+    color: var(--primary-color);
+    background-color: var(--secondary-color);
+}
+
+.notification-text {
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 8px;
+}

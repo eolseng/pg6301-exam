@@ -1,4 +1,5 @@
 const lootboxHandler = new Map();
+const authenticatedChatters = new Set();
 
 function registerLootboxHandler(userId, handler) {
     lootboxHandler.set(userId, handler);
@@ -16,8 +17,23 @@ function removeLootboxHandler(userId) {
     lootboxHandler.delete(userId);
 }
 
+function registerChatter(userId){
+    authenticatedChatters.add(userId)
+}
+
+function validateChatter(userId) {
+    return authenticatedChatters.has(userId);
+}
+
+function removeChatter(userId) {
+    authenticatedChatters.delete(userId);
+}
+
 module.exports = {
     registerLootboxHandler,
     getLootboxHandler,
     removeLootboxHandler,
+    registerChatter,
+    validateChatter,
+    removeChatter
 };

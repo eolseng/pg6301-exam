@@ -9,6 +9,7 @@ import {Login} from "./login";
 import {Cards} from "./cards";
 import {Notifications} from "./notifications";
 import {StatusBar} from "./status-bar";
+import {Chat} from "./chat";
 
 class App extends React.Component {
 
@@ -17,7 +18,6 @@ class App extends React.Component {
 
         this.state = {
             user: null,
-            userCount: 1,
             allCards: null
         };
     }
@@ -101,9 +101,11 @@ class App extends React.Component {
 
         let statusBar;
         let notification;
+        let chat;
         if (user) {
             statusBar = <StatusBar user={user} allCards={this.state.allCards}/>;
             notification = <Notifications user={user} fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>;
+            chat = <Chat user={user}/>
         }
 
         return (
@@ -132,6 +134,7 @@ class App extends React.Component {
                                                       fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>}/>
                         <Route component={this.notFound}/>
                     </Switch>
+                    {chat}
                 </div>
             </BrowserRouter>
         );

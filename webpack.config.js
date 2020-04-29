@@ -1,4 +1,4 @@
-// Origin: https://github.com/arcuri82/web_development_and_api_design
+// Origin: https://github.com/arcuri82/web_development_and_api_design/blob/master/les11/forum/webpack.config.js
 
 const path = require('path');
 

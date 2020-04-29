@@ -107,7 +107,7 @@ test('Test create Notification WebSocket', async () => {
 
 });
 
-test('Test missing token for authentication', async () => {
+test('Test missing token for notification authentication', async () => {
 
     const agent = request.agent(app);
     await signUp(agent, "Bar");
@@ -241,7 +241,7 @@ test('Test removed handler after close', async () => {
 
 });
 
-test('Test various errors', async () =>{
+test('Test various notification errors', async () =>{
 
     const agent = request.agent(app);
     await signUp(agent, "Foo");
@@ -271,7 +271,7 @@ test('Test various errors', async () =>{
 
     // Undefined topic
     let payload = JSON.stringify({
-        data: {message: "Jasså"}
+        data: "Jasså"
     });
     ws.send(payload);
 
@@ -283,7 +283,249 @@ test('Test various errors', async () =>{
     // Unhandled topic
     payload = JSON.stringify({
         topic: 'barbar',
-        data: {message: "Jasså"}
+        data: "Jasså"
+    });
+    ws.send(payload);
+
+    updated = await asyncCheckCondition(() => {
+        return errors.length === 2
+    }, 2000, 200);
+    expect(updated).toEqual(true);
+
+});
+
+test("Test create Chat WebSocket", async () => {
+
+    const agent = request.agent(app);
+    await signUp(agent, "Foo");
+    const token = await createToken(agent);
+
+    const ws = new WS('ws://localhost:' + port + "/chat");
+    sockets.push(ws);
+
+    let isConnected = await checkConnectedWS(ws, 2000);
+    expect(isConnected).toBe(true);
+
+    // Authenticate socket connection
+    let payload = JSON.stringify({
+        topic: 'login',
+        wstoken: token
+    });
+    ws.send(payload);
+
+    const updates = [];
+    const errors = [];
+    let messages = [];
+    ws.on('message', data => {
+
+        data = JSON.parse(data);
+
+        if (data.topic === 'update') {
+            if (data.error) {
+                errors.push(data.error)
+            } else {
+                updates.push(data.data)
+            }
+        } else if (data.topic === 'all_messages') {
+            messages = data.data;
+        } else if (data.topic === 'new_message') {
+            messages.unshift(data.message);
+        }
+    });
+
+    let updated = await asyncCheckCondition(() => {
+        return updates.length === 1
+    }, 2000, 200);
+    expect(updated).toEqual(true);
+
+    payload = JSON.stringify({
+        topic: 'new_chat_message',
+        data: 'Heisann'
+    });
+    ws.send(payload);
+
+    updated = await asyncCheckCondition(() => {
+        return messages.length === 1
+    }, 2000, 200);
+    expect(updated).toEqual(true);
+
+});
+
+test('Test missing token for chat authentication', async () =>{
+
+    const agent = request.agent(app);
+    await signUp(agent, "Bar");
+    const ws = new WS('ws://localhost:' + port + "/chat");
+    sockets.push(ws);
+
+    let isConnected = await checkConnectedWS(ws, 2000);
+    expect(isConnected).toBe(true);
+
+    const updates = [];
+    const errors = [];
+    let messages = [];
+    ws.on('message', data => {
+
+        data = JSON.parse(data);
+
+        if (data.topic === 'update') {
+            if (data.error) {
+                errors.push(data.error)
+            } else {
+                updates.push(data.data)
+            }
+        } else if (data.topic === 'all_messages') {
+            messages = data.data;
+        } else if (data.topic === 'new_message') {
+            messages.unshift(data.message);
+        }
+    });
+
+    // No token in payload
+    let payload = JSON.stringify({
+        topic: 'login'
+    });
+    ws.send(payload);
+
+    let updated = await asyncCheckCondition(() => {
+        return errors.length === 1
+    }, 2000, 200);
+    expect(updated).toEqual(true);
+
+});
+
+test('Test invalid token for chat authentication', async () =>{
+
+    const agent = request.agent(app);
+    await signUp(agent, "Bar");
+    const ws = new WS('ws://localhost:' + port + "/chat");
+    sockets.push(ws);
+
+    let isConnected = await checkConnectedWS(ws, 2000);
+    expect(isConnected).toBe(true);
+
+    const updates = [];
+    const errors = [];
+    let messages = [];
+    ws.on('message', data => {
+
+        data = JSON.parse(data);
+
+        if (data.topic === 'update') {
+            if (data.error) {
+                errors.push(data.error)
+            } else {
+                updates.push(data.data)
+            }
+        } else if (data.topic === 'all_messages') {
+            messages = data.data;
+        } else if (data.topic === 'new_message') {
+            messages.unshift(data.message);
+        }
+    });
+
+    // Invalid token is payload
+    let payload = JSON.stringify({
+        topic: 'login',
+        wstoken: 'invalidToken'
+    });
+    ws.send(payload);
+
+    let updated = await asyncCheckCondition(() => {
+        return errors.length === 1
+    }, 2000, 200);
+    expect(updated).toEqual(true);
+
+});
+
+test('Test send unauthenticated chat message', async () =>{
+
+    const agent = request.agent(app);
+    await signUp(agent, "Foo");
+    const ws = new WS('ws://localhost:' + port + "/chat");
+    sockets.push(ws);
+
+    let isConnected = await checkConnectedWS(ws, 2000);
+    expect(isConnected).toBe(true);
+
+    const updates = [];
+    const errors = [];
+    let messages = [];
+    ws.on('message', data => {
+
+        data = JSON.parse(data);
+
+        if (data.topic === 'update') {
+            if (data.error) {
+                errors.push(data.error)
+            } else {
+                updates.push(data.data)
+            }
+        } else if (data.topic === 'all_messages') {
+            messages = data.data;
+        } else if (data.topic === 'new_message') {
+            messages.unshift(data.message);
+        }
+    });
+
+    let payload = JSON.stringify({
+        topic: 'new_chat_message',
+        data: "Jasså"
+    });
+    ws.send(payload);
+
+    let updated = await asyncCheckCondition(() => {
+        return errors.length === 1
+    }, 2000, 200);
+    expect(updated).toEqual(true);
+
+});
+
+test('Test various chat errors', async () =>{
+
+    const agent = request.agent(app);
+    await signUp(agent, "Foo");
+    const ws = new WS('ws://localhost:' + port + "/chat");
+    sockets.push(ws);
+
+    let isConnected = await checkConnectedWS(ws, 2000);
+    expect(isConnected).toBe(true);
+
+    const updates = [];
+    const errors = [];
+    let messages = [];
+    ws.on('message', data => {
+
+        data = JSON.parse(data);
+
+        if (data.topic === 'update') {
+            if (data.error) {
+                errors.push(data.error)
+            } else {
+                updates.push(data.data)
+            }
+        } else if (data.topic === 'all_messages') {
+            messages = data.data;
+        } else if (data.topic === 'new_message') {
+            messages.unshift(data.message);
+        }
+    });
+
+    // Undefined topic
+    let payload = JSON.stringify({
+        data: "Jasså"
+    });
+    ws.send(payload);
+
+    let updated = await asyncCheckCondition(() => {
+        return errors.length === 1
+    }, 2000, 200);
+    expect(updated).toEqual(true);
+
+    // Unhandled topic
+    payload = JSON.stringify({
+        topic: 'barbar',
+        data: "Jasså"
     });
     ws.send(payload);
 

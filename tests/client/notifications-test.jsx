@@ -32,7 +32,7 @@ test('Test rendering', async () => {
     driver.setState({notifying: true});
     const displaying = await asyncCheckCondition(() => {
         driver.update();
-        return driver.html().includes("You just received a new lootbox!")
+        return driver.html().includes("YOU JUST GOT STUNG!")
     }, 500, 100);
     expect(displaying).toEqual(true);
 

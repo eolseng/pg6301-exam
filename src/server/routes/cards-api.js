@@ -11,6 +11,9 @@ router.get('/cards', function (req, res) {
 });
 
 router.get('/cards/:cardId', function (req, res) {
+
+    // THIS ENDPOINT IS NOT USED IN THE FRONT END
+
     // This endpoint is public. Everyone should be able to retrieve a single card.
     const card = Cards.getCard(parseInt(req.params.cardId));
 

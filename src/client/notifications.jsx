@@ -119,7 +119,7 @@ export class Notifications extends React.Component {
 
         return (
             <div className={"notification-bar"}>
-                <div className={"notification-text"}>You just received a new lootbox! Go open it!</div>
+                <div className={"notification-text"}>YOU JUST GOT STUNG! Here is a free lootbox to make up for the pain.</div>
             </div>
         )
     }
