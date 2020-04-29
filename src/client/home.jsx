@@ -1,7 +1,7 @@
 import React from "react";
-import {Link, Route} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {Lootbox} from "./lootbox";
-import {Cards} from "./cards";
+import {StatusBar} from "./status-bar";
 
 export class Home extends React.Component {
     constructor(props) {
@@ -22,17 +22,18 @@ export class Home extends React.Component {
         const user = this.props.user;
 
         return (
-            <div>
-                <div className={"profile-container"}>
-                    <div className={"profile-info"}>User: {user.id}</div>
-                    <div className={"profile-info"}>Lootboxes: {user.lootboxes}</div>
-                    <div className={"profile-info"}>Cash: ${user.cash}</div>
-                    <div className={"profile-info"}>Cards: {user.cardAmount}</div>
-                </div>
+            <React.Fragment>
+                <StatusBar user={user} allCards={this.props.allCards}/>
                 <Lootbox user={user} fetchAndUpdateUserInfo={this.props.fetchAndUpdateUserInfo}/>
-                <Cards user={user} fetchAndUpdateUserInfo={this.props.fetchAndUpdateUserInfo}/>
-            </div>
-
+                <h2>You have {user.cardAmount} cards.</h2>
+                <Link
+                    to={"/cards"}>
+                    <div className={"btn btn-m"}
+                         id={"collection-btn"}>
+                        View my cards
+                    </div>
+                </Link>
+            </React.Fragment>
         )
     }
 
@@ -45,20 +46,32 @@ export class Home extends React.Component {
             content = this.renderLoggedIn();
         } else {
             content =
-                <div>
+                <React.Fragment>
                     <h1>Welcome to Schmidts Stinging Friends</h1>
                     <p>This is a Gacha-game based on 'The Schmidt Pain Index', developed by the entomologist Dr. Justin
                         Schmidts.</p>
                     <p>You purchase lootboxes containing cards and gather them all.</p>
+                    <Link
+                        to={"/cards"}>
+                        <div className={"btn btn-m"}
+                             id={"collection-btn"}>
+                            See all our fantastic cards
+                        </div>
+                    </Link>
                     <p>PS.: Don't get stung. Some of these insects really hurt!</p>
                     <h3>Please sign up or log in to start collecting cards! :)</h3>
-                </div>
+                    <div>
+                        <Link className={"btn btn-m btn-cta"} id={"signup-btn"} to={"/signup"} tabIndex={"0"}>
+                            SIGN UP
+                        </Link>
+                        <Link className={"btn btn-m"} id={"login-btn"} to={"/login"} tabIndex={"0"}>
+                            LOG IN
+                        </Link>
+                    </div>
+                </React.Fragment>
         }
-
-        return (
-            <div>
-                {content}
-            </div>
-        );
+        return content
     }
 }
+
+export default withRouter(Home);

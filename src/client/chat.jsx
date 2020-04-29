@@ -171,7 +171,7 @@ export class Chat extends React.Component {
 
         return (
             <div className={"chat-container"}>
-                <h3>CHAT</h3>
+                <h2>Chat with other users:</h2>
                 <div className={"form-container"}>
                     <div className={"form-part"}>
                         <p className={"form-subtitle"}>Message:</p>
@@ -195,5 +195,4 @@ export class Chat extends React.Component {
             </div>
         );
     }
-
 }

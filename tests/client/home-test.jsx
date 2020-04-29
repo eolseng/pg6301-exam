@@ -4,11 +4,18 @@ const {MemoryRouter} = require('react-router-dom');
 
 const {Home} = require("../../src/client/home");
 
+const {getAllCards} = require('../../src/server/db/cards');
+
+const allCards = [...getAllCards().values()];
 const notLoggedInMessage = "Welcome to Schmidts Stinging Friends";
 
 test('Test not logged in', async () => {
 
-    const driver = mount(<Home/>);
+    const driver = mount(
+        <MemoryRouter initialEntries={["/home"]}>
+            <Home allCards={allCards}/>
+        </MemoryRouter>
+    );
     
     const html = driver.html();
     expect(html.includes(notLoggedInMessage)).toEqual(true);
@@ -25,6 +32,7 @@ test('Test logged in', async () => {
         "id": id,
         "cash": cash,
         "cardAmount": cardAmount,
+        "cards": [],
         "lootboxes": lootboxes
     };
 
@@ -32,15 +40,13 @@ test('Test logged in', async () => {
 
     const driver = mount(
         <MemoryRouter initialEntries={["/home"]}>
-            <Home user={user} fetchAndUpdateUserInfo={fetchAndUpdateUserInfo}/>
+            <Home user={user} fetchAndUpdateUserInfo={fetchAndUpdateUserInfo} allCards={allCards}/>
         </MemoryRouter>
     );
 
     const html = driver.html();
     expect(html.includes(notLoggedInMessage)).toEqual(false);
-    expect(html.includes(id)).toEqual(true);
-    expect(html.includes(cash)).toEqual(true);
-    expect(html.includes(cardAmount)).toEqual(true);
-    expect(html.includes(lootboxes)).toEqual(true);
+    expect(html.includes("You have")).toEqual(true);
+    expect(html.includes("View my cards")).toEqual(true);
 
 });

@@ -1,6 +1,7 @@
 import React from "react";
 
 export class Lootbox extends React.Component {
+
     constructor(props) {
         super(props);
 
@@ -72,9 +73,6 @@ export class Lootbox extends React.Component {
 
     renderCards() {
         const cards = this.state.newCards;
-        if (cards.length <= 0) {
-            return "";
-        }
         return <div className={"cards-container"}>
             {cards.map((card, index) => this.renderCard(card, index))}
         </div>
@@ -120,8 +118,8 @@ export class Lootbox extends React.Component {
         }
 
         return <div>
-            {openButton}
             {purchaseButton}
+            {openButton}
         </div>
     }
 
@@ -141,11 +139,11 @@ export class Lootbox extends React.Component {
         } else if (this.state.newCards.length > 0) {
             content =
                 <div className={"lootbox-container"}>
-                    <h2>Congratulations! Here are your new cards:</h2>
-                    {this.renderCards()}
                     <h2>You have {user.lootboxes} unopened lootboxes</h2>
                     {error}
                     {this.renderButtons(user)}
+                    <h2>Congratulations! Here are your new cards:</h2>
+                    {this.renderCards()}
                 </div>
         } else {
             content =

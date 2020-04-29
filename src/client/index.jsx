@@ -7,6 +7,7 @@ import Header from "./header";
 import {SignUp} from "./signup";
 import {Login} from "./login";
 import {Chat} from "./chat";
+import {Cards} from "./cards";
 
 class App extends React.Component {
 
@@ -15,13 +16,40 @@ class App extends React.Component {
 
         this.state = {
             user: null,
-            userCount: 1
+            userCount: 1,
+            allCards: null
         };
     }
 
     componentDidMount() {
         this.fetchAndUpdateUserInfo();
+        this.fetchAllCards();
     }
+
+    fetchAllCards = async () => {
+
+        const url = "/api/cards";
+
+        let response;
+        try {
+            response = await fetch(url, {
+                method: "get"
+            });
+        } catch (error) {
+            this.setState({errorMsg: "Failed to connect to server: " + error});
+            return;
+        }
+
+        if (response.status === 200) {
+            const payload = await response.json();
+            this.setState({allCards: payload});
+        } else {
+            this.setState({
+                errorMsg: "Unknown error.\n" +
+                    "Status Code: " + response.status
+            });
+        }
+    };
 
     fetchAndUpdateUserInfo = async () => {
 
@@ -87,14 +115,20 @@ class App extends React.Component {
                         <Route exact path={"/signup"}
                                render={props => <SignUp {...props}
                                                         fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>}/>
+                        <Route exact path={"/cards"}
+                               render={props => <Cards {...props}
+                                                       user={user}
+                                                       allCards={this.state.allCards}
+                                                       fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>}/>
                         <Route exact path={"/"}
                                render={props => <Home {...props}
                                                       user={user}
+                                                      allCards={this.state.allCards}
                                                       fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>}/>
                         <Route component={this.notFound}/>
                     </Switch>
+                    {chat}
                 </div>
-                {chat}
             </BrowserRouter>
         );
     }

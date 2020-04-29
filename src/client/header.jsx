@@ -46,13 +46,21 @@ export class Header extends React.Component {
         return (
             <React.Fragment>
                 <div className={"header-text"}>Welcome, {userId}</div>
-                <Link
-                    className={"btn btn-m"}
-                    id={"logout-btn"}
-                    onClick={this.doLogout}
-                    to={"/"}>
-                    LOG OUT
-                </Link>
+                <div>
+                    <Link
+                        className={"btn btn-m"}
+                        id={"collection-btn"}
+                        to={"/cards"}>
+                        MY CARDS
+                    </Link>
+                    <Link
+                        className={"btn btn-m"}
+                        id={"logout-btn"}
+                        onClick={this.doLogout}
+                        to={"/"}>
+                        LOG OUT
+                    </Link>
+                </div>
             </React.Fragment>
         );
     }

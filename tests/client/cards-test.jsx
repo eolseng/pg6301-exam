@@ -5,8 +5,11 @@ const {MemoryRouter} = require('react-router-dom');
 const {Cards} = require("../../src/client/cards");
 const {overrideFetch, asyncCheckCondition} = require('../mytest-utils');
 const {app} = require('../../src/server/app');
+const {getAllCards} = require('../../src/server/db/cards');
 
 const {resetAllUsers} = require('../../src/server/db/users');
+
+const allCards = [...getAllCards().values()];
 
 beforeEach(() => {
     resetAllUsers();
@@ -40,40 +43,43 @@ async function openLootbox() {
     return response.status === 202;
 }
 
-async function getCards() {
-    const response = await fetch("/api/user/cards", {
-        method: "get"
-    });
-    expect(response.status).toEqual(200);
-    return await response.json();
-}
-
 test('Test not logged in', async () => {
 
-    const driver = mount(<Cards/>);
+    const driver = mount(
+        <MemoryRouter initialEntries={["/home"]}>
+            <Cards allCards={allCards}/>
+        </MemoryRouter>
+    );
 
     const html = driver.html();
-    expect(html).toEqual("");
+    expect(html.includes("You have")).toEqual(false);
 
 });
 
 test('Test no cards', async () => {
 
     overrideFetch(app);
-    
+
     const signedUp = await signUp("Schmidt", "Donovan");
     expect(signedUp).toEqual(true);
-    
+
     const user = await getUser();
     expect(user.id).toBeDefined();
 
-    const driver = mount(<Cards user={user}/>);
-    const displayed = await asyncCheckCondition(() => {
+    const fetchAndUpdateUserInfo = () => new Promise(resolve => resolve());
+
+    const driver = mount(
+        <MemoryRouter initialEntries={["/home"]}>
+            <Cards user={user} fetchAndUpdateUserInfo={fetchAndUpdateUserInfo} allCards={allCards}/>
+        </MemoryRouter>
+    );
+
+    const displayed = await asyncCheckCondition(() => {
         driver.update();
         return driver.html().includes(noCardsMessage);
     }, 500, 100);
     expect(displayed).toEqual(true);
-    
+
 });
 
 test('Test with cards', async () => {
@@ -83,25 +89,31 @@ test('Test with cards', async () => {
     const signedUp = await signUp("Sauron", "Donovan");
     expect(signedUp).toEqual(true);
 
-    const user = await getUser();
+    let user = await getUser();
     expect(user.id).toBeDefined();
-    
+
     const openedBox = await openLootbox();
     expect(openedBox).toEqual(true);
-    
-    const cards = await getCards();
-    expect(cards.length).toBeGreaterThan(0);
 
-    const driver = mount(<Cards user={user}/>);
-    driver.setState({cards: cards});
-    const displayed = await asyncCheckCondition(() => {
+    user = await getUser();
+    expect(user.cards.length).toBeGreaterThan(0);
+
+    const fetchAndUpdateUserInfo = () => new Promise(resolve => resolve());
+
+    const driver = mount(
+        <MemoryRouter initialEntries={["/home"]}>
+            <Cards user={user} fetchAndUpdateUserInfo={fetchAndUpdateUserInfo} allCards={allCards}/>
+        </MemoryRouter>
+    );
+
+    const displayed = await asyncCheckCondition(() => {
         driver.update();
         return !driver.html().includes(noCardsMessage);
     }, 500, 100);
     expect(displayed).toEqual(true);
-    
+
     const cardsContainer = driver.find(".cards-container");
     expect(cardsContainer).toBeDefined();
-    
+
 });
 

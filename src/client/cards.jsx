@@ -1,26 +1,30 @@
 import React from "react";
+import {StatusBar} from "./status-bar";
+import {withRouter, Link} from "react-router-dom";
 
 export class Cards extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            cards: [],
             errorMsg: ""
         };
     }
 
-    componentDidMount() {
-        this.fetchCards();
+    componentDidMount() {
+        if (this.props.user) {
+            this.props.fetchAndUpdateUserInfo();
+        }
     }
 
-    fetchCards = async () => {
-        const url = '/api/user/cards';
+    millCard = async (id) => {
+
+        const url = '/api/user/cards/' + id + '/mill';
 
         let response;
         try {
             response = await fetch(url, {
-                method: "get"
+                method: "post"
             });
         } catch (error) {
             this.setState({errorMsg: "Failed to connect to server: " + error});
@@ -30,61 +34,143 @@ export class Cards extends React.Component {
         if (response.status === 401) {
             this.setState({errorMsg: "The session has expired. Please log in again."});
             return;
-        } else if (response.status !== 200) {
+        } else if (response.status === 400) {
+            this.setState({errorMsg: "You do not have this card. Milling failed"});
+            return;
+        } else if (response.status !== 204) {
             this.setState({errorMsg: "Error when connection to server:\nStatus code: " + response.status});
             return;
         }
 
-        const cards = await response.json();
-
-        this.setState({cards: cards});
+        await this.props.fetchAndUpdateUserInfo();
 
     };
 
-    renderCards() {
-        const cards = this.state.cards;
+    getMissing(ownedCards, allCards) {
 
-        if (cards.length <= 0){
+        let missingCards = [];
+        allCards.forEach(card => {
+            if (!ownedCards.some(owned => owned.id === card.id)) {
+                missingCards.push(card);
+            }
+        });
+        return this.renderCards(missingCards);
+    }
+
+    renderCards(cards) {
+
+        if (!cards || cards.length <= 0) {
             return "";
         }
 
         return <div className={"cards-container"}>
-            {this.state.cards.map((card) => this.renderCard(card))}
+            {cards.map((card) => this.renderCard(card))}
         </div>
     }
 
     renderCard(card) {
-        return <div className={"card-container"} key={"KEY_CARD_" + card.id}>
-            <div className={"card-name"}>{card.card.name}</div>
-            <div className={"card-latin-name"}>{card.card.latinName}</div>
-            <div className={"card-pain-level"}>Pain level: {card.card.painLevel}</div>
-            <div className={"card-description"}>{card.card.description}</div>
-            <div className={"card-value"}>Value: ${card.card.value}</div>
-            <div className={"card-amount"}>You have {card.amount} of this card.</div>
-        </div>
+        if (!card.amount) {
+            return <div className={"card-container"} key={"KEY_CARD_" + card.id}>
+                <div className={"card-name"}>{card.name}</div>
+                <div className={"card-latin-name"}>{card.latinName}</div>
+                <div className={"card-pain-level"}>Pain level: {card.painLevel}</div>
+                <div className={"card-description"}>{card.description}</div>
+                <div className={"card-value"}>Value: ${card.value}</div>
+            </div>
+        } else {
+            return <div className={"card-container"} key={"KEY_CARD_" + card.id}>
+                <div className={"card-name"}>{card.card.name}</div>
+                <div className={"card-latin-name"}>{card.card.latinName}</div>
+                <div className={"card-pain-level"}>Pain level: {card.card.painLevel}</div>
+                <div className={"card-description"}>{card.card.description}</div>
+                <div className={"card-value"}>Value: ${card.card.value}</div>
+                <div className={"card-amount"}>You have {card.amount} of this card.</div>
+                <div className={"card-mill-btn btn btn-m"} onClick={() => this.millCard(card.id)}>Mill card</div>
+            </div>
+        }
+    }
+
+    renderNotLoggedIn() {
+
+        const cards = this.props.allCards;
+
+        if (cards === null) {
+            return "";
+        }
+        return this.renderCards(cards);
+    }
+
+    renderLoggedIn() {
+
+        const user = this.props.user;
+        const cards = user.cards;
+        const allCards = this.props.allCards;
+
+        let userCards;
+        if (cards) {
+            if (cards.length <= 0) {
+                userCards =
+                    <React.Fragment>
+                        <h2>You do not have any cards. Please open or purchase a lootbox!</h2>
+                        <Link
+                            className={"btn btn-m"}
+                            id={"home-btn"}
+                            to={"/"}>
+                            Go home
+                        </Link>
+                    </React.Fragment>
+            } else {
+                userCards =
+                    <React.Fragment>
+                        <h2>You have {cards.length} unique cards:</h2>
+                        <div className={"cards-container"}>
+                            {this.renderCards(cards)}
+                        </div>
+                    </React.Fragment>
+            }
+        }
+
+        let notOwnedCards;
+        if (allCards) {
+            const missingCards = this.getMissing(cards, allCards);
+            notOwnedCards =
+                <React.Fragment>
+                    <h2>You are missing {allCards.length - cards.length} unique cards:</h2>
+                    {missingCards}
+                </React.Fragment>
+        }
+
+        return (
+            <React.Fragment>
+                <StatusBar user={user} allCards={allCards}/>
+                {userCards}
+                {notOwnedCards}
+            </React.Fragment>
+        )
     }
 
     render() {
 
         const user = this.props.user;
-
         let content;
-
         if (!user) {
-            content = "";
+            content = this.renderNotLoggedIn();
         } else {
-            if (this.state.cards.length <= 0) {
-                content =
-                    <h2>You do not have any cards. Please open or purchase a lootbox!</h2>
-            } else {
-                content =
-                    <div className={"cards-container"}>
-                        <h2>You have {this.state.cards.length} cards!</h2>
-                        {this.renderCards()}
-                    </div>
-            }
+            content = this.renderLoggedIn();
         }
 
-        return content;
+        return (
+            <React.Fragment>
+                {content}
+                <Link
+                    className={"btn btn-m"}
+                    id={"home-btn"}
+                    to={"/"}>
+                    Go home
+                </Link>
+            </React.Fragment>
+        )
     }
 }
+
+export default withRouter(Cards);

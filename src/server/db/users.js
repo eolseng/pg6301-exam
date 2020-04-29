@@ -20,7 +20,7 @@ function getUser(id) {
 function createUser(id, password) {
 
     if (getUser(id)) {
-        // Hashing so the response takes the same time even if username i already taken.
+        // Hashing so the response takes the same time even if the username i already taken.
         hashPassword(password);
         return false;
     }
@@ -39,7 +39,7 @@ function verifyUser(id, password) {
     const user = getUser(id);
 
     if (!user) {
-        // Hashing so the response takes the same time even if user does not exist.
+        // Hashing so the response takes the same time even if the user does not exist.
         // This way an attacker can not check the response time to see if the userId is registered or not.
         hashPassword(password);
         return false;
@@ -48,8 +48,27 @@ function verifyUser(id, password) {
     return comparePassword(password, user.password);
 }
 
+function deleteUser(id) {
+    // Returns true if object found and deleted, false if object did not exist.
+    return users.delete(id);
+}
+
+function updatePassword(id, newPassword) {
+
+    const user = users.get(id);
+
+    if(!user) {
+        return false
+    }
+
+    user.password = hashPassword(newPassword);
+    users.set(id, user);
+    return true
+
+}
+
 function resetAllUsers() {
     users.clear();
 }
 
-module.exports = {getUser, createUser, verifyUser, resetAllUsers};
+module.exports = {getUser, createUser, verifyUser, deleteUser, updatePassword, resetAllUsers};
