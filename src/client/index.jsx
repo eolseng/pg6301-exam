@@ -6,7 +6,6 @@ import {Home} from "./home";
 import Header from "./header";
 import {SignUp} from "./signup";
 import {Login} from "./login";
-import {Chat} from "./chat";
 import {Cards} from "./cards";
 import {Notifications} from "./notifications";
 import {StatusBar} from "./status-bar";
@@ -103,7 +102,7 @@ class App extends React.Component {
         let statusBar;
         let notification;
         if (user) {
-            statusBar = <StatusBar user={user} allCards={this.state.allCards}/>
+            statusBar = <StatusBar user={user} allCards={this.state.allCards}/>;
             notification = <Notifications user={user} fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>;
         }
 

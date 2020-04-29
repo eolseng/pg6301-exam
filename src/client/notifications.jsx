@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from "react-router-dom";
 
 export class Notifications extends React.Component {
     constructor(props) {

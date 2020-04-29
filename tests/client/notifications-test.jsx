@@ -21,12 +21,12 @@ test('Test rendering', async () => {
     let user = {id: userId};
     const fetchAndUpdateUserInfo = () => new Promise(resolve => resolve());
 
-    const driver = mount(<Notifications user={user} fetchAndUpdateUserInfo={fetchAndUpdateUserInfo}/>)
+    const driver = mount(<Notifications user={user} fetchAndUpdateUserInfo={fetchAndUpdateUserInfo}/>);
 
     const notDisplaying = await asyncCheckCondition(() => {
         driver.update();
         return driver.html() === ""
-    }, 500, 100)
+    }, 500, 100);
     expect(notDisplaying).toEqual(true);
 
     driver.setState({notifying: true});

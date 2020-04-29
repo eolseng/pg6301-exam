@@ -236,7 +236,7 @@ test('Test removed handler after close', async () => {
     let closed = await asyncCheckCondition(() => {
         handler = getLootboxHandler(userId);
         return !handler;
-    },2000, 200)
+    },2000, 200);
     expect(closed).toEqual(true);
 
 });

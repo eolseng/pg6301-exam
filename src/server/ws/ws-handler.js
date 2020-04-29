@@ -10,7 +10,7 @@ function init(app) {
 
     ews = expressWs(app);
 
-    app.ws('/notifications', (ws, req) => {
+    app.ws('/notifications', (ws) => {
 
         // Setup Handlers for different topics
         ws.messageHandlers = new Map();
