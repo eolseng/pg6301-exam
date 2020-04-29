@@ -1,5 +1,4 @@
 import React from "react";
-import {StatusBar} from "./status-bar";
 import {withRouter, Link} from "react-router-dom";
 
 export class Cards extends React.Component {
@@ -142,7 +141,6 @@ export class Cards extends React.Component {
 
         return (
             <React.Fragment>
-                <StatusBar user={user} allCards={allCards}/>
                 {userCards}
                 {notOwnedCards}
             </React.Fragment>

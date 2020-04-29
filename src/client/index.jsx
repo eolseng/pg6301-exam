@@ -8,6 +8,8 @@ import {SignUp} from "./signup";
 import {Login} from "./login";
 import {Chat} from "./chat";
 import {Cards} from "./cards";
+import {Notifications} from "./notifications";
+import {StatusBar} from "./status-bar";
 
 class App extends React.Component {
 
@@ -98,9 +100,11 @@ class App extends React.Component {
         const user = this.state.user ? this.state.user : null;
         const userId = user ? user.id : null;
 
-        let chat;
+        let statusBar;
+        let notification;
         if (user) {
-            chat = <Chat user={user}/>
+            statusBar = <StatusBar user={user} allCards={this.state.allCards}/>
+            notification = <Notifications user={user} fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>;
         }
 
         return (
@@ -108,6 +112,8 @@ class App extends React.Component {
                 <Header userId={userId}
                         updateLoggedInUser={this.updateLoggedInUser}/>
                 <div className={"content"}>
+                    {statusBar}
+                    {notification}
                     <Switch>
                         <Route exact path={"/login"}
                                render={props => <Login {...props}
@@ -127,7 +133,6 @@ class App extends React.Component {
                                                       fetchAndUpdateUserInfo={this.fetchAndUpdateUserInfo}/>}/>
                         <Route component={this.notFound}/>
                     </Switch>
-                    {chat}
                 </div>
             </BrowserRouter>
         );

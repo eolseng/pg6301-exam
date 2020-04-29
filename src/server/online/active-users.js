@@ -1,6 +1,24 @@
 const socketToUser = new Map();
 const userToSocket = new Map();
 
+const lootboxHandler = new Map();
+
+function registerLootboxHandler(userId, handler) {
+    lootboxHandler.set(userId, handler);
+}
+
+function getLootboxHandler(userId) {
+    return lootboxHandler.get(userId);
+}
+
+function removeLootboxHandler(userId) {
+    const handler = lootboxHandler.get(userId);
+    if (handler) {
+        clearInterval(handler);
+    }
+    lootboxHandler.delete(userId);
+}
+
 function registerSocket(ws, userId) {
     socketToUser.set(ws.id, userId);
     userToSocket.set(userId, ws);
@@ -30,4 +48,14 @@ function getUser(socketId) {
     return socketToUser.get(socketId);
 }
 
-module.exports = {registerSocket, removeSocket, removeUser, isActive, getSocket, getUser};
+module.exports = {
+    registerLootboxHandler,
+    getLootboxHandler,
+    removeLootboxHandler,
+    registerSocket,
+    removeSocket,
+    removeUser,
+    isActive,
+    getSocket,
+    getUser
+};

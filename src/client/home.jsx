@@ -1,7 +1,6 @@
 import React from "react";
 import {Link, withRouter} from 'react-router-dom';
 import {Lootbox} from "./lootbox";
-import {StatusBar} from "./status-bar";
 
 export class Home extends React.Component {
     constructor(props) {
@@ -23,7 +22,6 @@ export class Home extends React.Component {
 
         return (
             <React.Fragment>
-                <StatusBar user={user} allCards={this.props.allCards}/>
                 <Lootbox user={user} fetchAndUpdateUserInfo={this.props.fetchAndUpdateUserInfo}/>
                 <h2>You have {user.cardAmount} cards.</h2>
                 <Link
