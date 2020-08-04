@@ -1,4 +1,4 @@
-> EXAM || PGR6301 - Web Development and API Design || ID 365
+> EXAM || PGR6301 - Web Development and API Design || ID 365 || Grade: A
 # Schmidts Stinging Friends
 ![](docs/img/schmidt_pain_scale_index.jpg "Graphic by Michelle Enemark")
 
@@ -39,7 +39,7 @@ RESTful API, HTTP, WebSockets, Yarn, React, Node.js, Express.js, Passport.js, Ba
 * WebSocket based chat that broadcasts new messages to all logged in users
 
 ### Other notes
-
+See the assignment [here](docs/2020_pg6301_exam_april.pdf). 
 
 ## External sources:
 From https://github.com/arcuri82/web_development_and_api_design:
