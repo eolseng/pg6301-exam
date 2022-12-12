@@ -17,7 +17,7 @@
     "watch:server": "nodemon src/server/server.js --watch src/server --watch public/bundle.js"
   },
   "dependencies": {
-    "express": "4.17.1",
+    "express": "4.17.3",
     "express-session": "1.17.0",
     "express-ws": "4.0.0",
 
